@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:product_app/models/setting.dart';
 import 'package:product_app/models/theme.dart';
+import 'package:product_app/utils/themes.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingProvider extends StatefulWidget {
   final Widget child;
@@ -13,8 +15,20 @@ class SettingProvider extends StatefulWidget {
 
 class _SettingProviderState extends State<SettingProvider> {
   final Setting _setting = Setting();
-  bool get isRTL=>_setting.isRTL;
-   MyTheme get theme=>_setting.theme;
+
+  bool get isRTL => _setting.isRTL;
+
+  MyTheme get theme => _setting.theme;
+
+  void getSaveTheme(){
+     _setting.getSavedData();
+     setState(() {});
+  }
+  void changeTheme(String name) {
+     _setting.changeTheme(name).then((value) {
+       setState(() {});
+     });
+  }
 
   @override
   Widget build(BuildContext context) => SettingBlocProvider(
@@ -28,7 +42,7 @@ class SettingBlocProvider extends InheritedWidget {
   final Setting setting;
   final _SettingProviderState state;
 
- const SettingBlocProvider({
+  const SettingBlocProvider({
     Key? key,
     required Widget child,
     required this.state,
@@ -36,9 +50,11 @@ class SettingBlocProvider extends InheritedWidget {
   }) : super(child: child, key: key);
 
   static _SettingProviderState of(BuildContext context) =>
-      (context.dependOnInheritedWidgetOfExactType<SettingBlocProvider>(aspect: SettingBlocProvider))!.state;
+      (context.dependOnInheritedWidgetOfExactType<SettingBlocProvider>(
+              aspect: SettingBlocProvider))!
+          .state;
 
   @override
   bool updateShouldNotify(SettingBlocProvider oldWidget) =>
-      oldWidget.setting != state._setting;
+      oldWidget.setting.compareTo(setting);
 }

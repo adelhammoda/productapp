@@ -1,17 +1,27 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Customer {
-  late String customerId;
-  final String name;
-  final String? imageURL;
-  final String location;
+  final String customerId;
   double installment;
+  List<DocumentReference> receipts;
 
-  //TODO:initial this value from DB
-  late bool havePreviousInstallment;
+  Customer(
+      {required this.customerId,
+      required this.installment,
+      required this.receipts});
 
-  Customer({
-    required this.name,
-    required this.imageURL,
-    required this.installment,
-    required this.location,
-  });
+  factory Customer.fromJSON(Map<String, dynamic> data, String costumerID) {
+    return Customer(
+        customerId: costumerID,
+        installment: data['installment'],
+        receipts: data['receipts']);
+  }
+
+  Map<String, dynamic> toJSON() {
+    return {
+      'installment': installment,
+      'receipts': receipts,
+    };
+  }
 }
+

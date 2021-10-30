@@ -1,69 +1,65 @@
-import 'dart:math';
+import 'dart:core';
+
+
 
 abstract class Product {
   late final String id;
   late final String name;
+  late double individualPrice;
+  late final String unit;
   late final String type;
-  late final double price;
-  late int count = 0;
-}
-
-class CustomerProduct implements Product {
-  @override
-  int count;
-  @override
-  double price;
-  @override
-  String name;
-  @override
-  String type;
-
-  int dozen = 0;
-
-  CustomerProduct(
-      {required this.name,
-      required this.type,
-      this.count = 0,
-      required this.price}){
-    id=Random.secure().nextInt(1000).toString();
-  }
-
-  //TODO:add dozen function.
-  void dozenCount() {
-    dozen = (count / 12).round();
-  }
-
-  @override
-  late String id;
 }
 
 class RepositoryProduct implements Product {
-  final String? productId = '';
   @override
-  String name;
+  String id;
 
   @override
-  double price;
+  double individualPrice;
+
+  @override
+  String name;
 
   @override
   String type;
 
   @override
-  late int count;
+  String unit;
 
-  final String imageURl;
+  int count;
+  final String imageURL;
 
-  RepositoryProduct(
-      {required this.imageURl,
-      required int countInRepo,
-      required this.name,
-      required this.type,
-      required this.price}) {
-    count = countInRepo;
-    id=Random.secure().nextInt(1000).toString();
+  RepositoryProduct({
+    required this.imageURL,
+    required this.id,
+    required this.individualPrice,
+    this.count = 0,
+    required this.type,
+    required this.unit,
+    required this.name,
+  });
+
+  factory RepositoryProduct.fromJSON(Map<String, dynamic> data,String productID) {
+    return RepositoryProduct(
+        imageURL: data['imageURL'],
+        id: productID,
+        individualPrice: data['price'],
+        type: data['type'],
+        unit: data['unit'],
+        name: data['name'],
+        count: data['count']);
   }
 
-  @override
-  late String id;
-
+  Map<String, dynamic> toJSON() {
+    return {
+      'imageURL': imageURL,
+      'price': individualPrice,
+      'type': type,
+      'unit': unit,
+      'name': name,
+      'count': count
+    };
+  }
 }
+
+

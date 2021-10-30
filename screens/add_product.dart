@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:product_app/bloc/setting_bloc_provider.dart';
 import 'package:product_app/models/product.dart';
+import 'package:product_app/utils/my_icons_icons.dart';
 import 'package:product_app/widgets/app_bar.dart';
 import 'package:responsive_s/responsive_s.dart';
 
@@ -166,7 +167,7 @@ class _AddProductState extends State<AddProduct> {
                         child: _buildTextField('count', null, 15,inputType: TextInputType.number)),
                     _buildButtons(
                         const Icon(
-                          Icons.exposure_minus_1,
+                          MyIcons.minus,
                           color: Colors.red,
                         ), () {
                       //TODO:add decrease logic here.
@@ -256,7 +257,7 @@ class _AddProductState extends State<AddProduct> {
                   )),
               placeholder: const AssetImage('assets/images/placeholder.png'),
               image: NetworkImage(
-                  widget.product == null ? '' : widget.product!.imageURl)),
+                  widget.product == null ? '' : widget.product!.imageURL)),
         ),
       ),
     );

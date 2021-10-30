@@ -197,15 +197,14 @@ class _HistoryPageState extends State<HistoryPage>
                         products: List.generate(
                             12,
                             (index) => CustomerProduct(
+                              productID: '',
+                                unit: '',
                                 name: 'product',
-                                price: 12,
+                                individualPrice: 12,
                                 type: 'type',
                                 count: 2)),
                         customer: Customer(
-                            name: 'name',
-                            imageURL: '',
-                            installment: 12,
-                            location: 'Al tal')),
+                            installment: 12,customerId: '',receipts: [])),
                       onReceiptTaped:null,
                   ),
                 ],

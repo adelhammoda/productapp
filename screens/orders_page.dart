@@ -6,6 +6,7 @@ import 'package:product_app/bloc/setting_bloc_provider.dart';
 import 'package:product_app/models/customer.dart';
 import 'package:product_app/models/product.dart';
 import 'package:product_app/models/receipt.dart';
+import 'package:product_app/utils/my_icons_icons.dart';
 import 'package:product_app/widgets/app_bar.dart';
 import 'package:product_app/widgets/receipt_widget.dart';
 
@@ -50,36 +51,36 @@ class _OrderPageState extends State<OrderPage> with TickerProviderStateMixin {
                   offer: 0,
                   customer: Customer(
                     //
-                    location: 'Horna',
                     installment: 12000,
-                    imageURL:
-                        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTW6509Xrnys2Pp_8RB3ffNOsqDrKlPtkvkRQ&usqp=CAU',
-                    name: 'Omar',
+                    receipts: [],
+                    customerId: ''
                   ),
                   products: List.generate(
                       5,
                       (index) => CustomerProduct(
                           name: 'product name',
                           type: 'sapon',
-                          price: 1000,
+                          productID: '',
+                          unit: '',
+                          individualPrice: 1000,
                           count: 12))))),
           buildPageView(List.generate(
               1,
               (index) => Receipt(
                   offer: 100,
                   customer: Customer(
-                    location: 'Horna',
+                  customerId: '',
+                    receipts: [],
                     installment: 1120,
-                    imageURL:
-                        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTW6509Xrnys2Pp_8RB3ffNOsqDrKlPtkvkRQ&usqp=CAU',
-                    name: 'Ali',
                   ),
                   products: List.generate(
                       5,
                       (index) => CustomerProduct(
+                        productID: ''  ,
+                          unit: '',
                           name: 'product name',
                           type: 'sapon',
-                          price: 11000,
+                          individualPrice: 11000,
                           count: 2))))),
         ],
         // controller: ,
@@ -91,12 +92,12 @@ class _OrderPageState extends State<OrderPage> with TickerProviderStateMixin {
           buildButtons(const Icon(Icons.done, color: Colors.green), 'Done',
               color: Colors.green),
           buildButtons(
-            const Icon(Icons.timer, color: Colors.amber),
-            'Awaiting',
+            const Icon(MyIcons.hourglass, color: Colors.amber),
+            'waiting',
             color: Colors.amber,
           ),
           buildButtons(
-              const Icon(Icons.close, color: Colors.redAccent), 'Denied',
+              const Icon(MyIcons.block, color: Colors.redAccent), 'Denied',
               color: Colors.redAccent),
         ],
       ),
@@ -166,10 +167,9 @@ class _OrderPageState extends State<OrderPage> with TickerProviderStateMixin {
                       receipt: Receipt(
                         offer: receipt[index].offer,
                         customer: Customer(
-                          location: receipt[index].customer.location,
                           installment: receipt[index].customer.installment,
-                          imageURL: receipt[index].customer.imageURL,
-                          name: receipt[index].customer.name,
+                          customerId: '',
+                          receipts: []
                         ),
                         products: receipt[index].products,
                       )),

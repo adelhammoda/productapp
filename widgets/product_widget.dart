@@ -9,8 +9,8 @@ class ProductWidget extends DataRow {
       : super(cells: [
     DataCell(Text(_product.name)),
     DataCell(Text(_product.count.toString())),
-    DataCell(Text(_product.price.toString())),
-    DataCell(Text('${_product.price * _product.count}')),
+    DataCell(Text(_product.individualPrice.toString())),
+    DataCell(Text('${_product.individualPrice * _product.count}')),
   ]);
 
 

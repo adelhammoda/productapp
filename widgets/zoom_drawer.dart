@@ -6,6 +6,7 @@ import 'package:product_app/screens/history_page.dart';
 import 'package:product_app/screens/casheir_page.dart';
 import 'package:product_app/screens/repository_page.dart';
 import 'package:product_app/screens/setting_page.dart';
+import 'package:product_app/utils/my_icons_icons.dart';
 import 'package:responsive_s/responsive_s.dart';
 
 class ZoomDrawerWidget extends StatefulWidget {
@@ -20,7 +21,7 @@ class _ZoomDrawerWidgetState extends State<ZoomDrawerWidget> {
 
   @override
   void initState() {
-    _homePage = const HomePage();
+    _homePage = const CashierPage();
     super.initState();
   }
 
@@ -86,21 +87,21 @@ class _ZoomDrawerWidgetState extends State<ZoomDrawerWidget> {
                         ),
                       ),
                     )),
+                buildListTile(MyIcons.cash_register, Colors.green, 'Cashier',
+                    const CashierPage()),
                 buildListTile(
-                    'assets/images/home.png', 'Sell Product', const HomePage()),
-                buildListTile(
-                    'assets/images/settings.png',
+                    MyIcons.add_box,
+                    Colors.red,
                     'Add new Products',
                     const AddProduct(
                       add: true,
                     )),
-                buildListTile('assets/images/settings.png', 'History',
+                buildListTile(MyIcons.history, Colors.brown, 'History',
                     const HistoryPage()),
-                buildListTile('assets/images/settings.png', 'Setting',
-                    const SettingPage()),
-
-                buildListTile('assets/images/settings.png', 'Repository',
-                    const RepositoryPage()),
+                buildListTile(
+                    MyIcons.cog_outline, null, 'Setting', const SettingPage()),
+                buildListTile(MyIcons.th_thumb_empty, Colors.lightBlue,
+                    'Repository', const RepositoryPage()),
               ],
             ),
           ),
@@ -111,7 +112,7 @@ class _ZoomDrawerWidgetState extends State<ZoomDrawerWidget> {
   }
 
   ListTileTheme buildListTile(
-      String iconPath, String title, Widget navigatorPage) {
+      IconData icon, Color? color, String title, Widget navigatorPage) {
     bool rtl = SettingBlocProvider.of(context).isRTL;
     return ListTileTheme(
       tileColor: SettingBlocProvider.of(context).theme.secondaryColor,
@@ -119,20 +120,15 @@ class _ZoomDrawerWidgetState extends State<ZoomDrawerWidget> {
       child: ListTile(
         leading: rtl
             ? null
-            : Image.asset(
-                iconPath,
-                width: 30,
+            : Icon(
+                icon,
+                color: color,
               ),
         title: Text(
           title,
           textAlign: rtl ? TextAlign.end : TextAlign.start,
         ),
-        trailing: rtl
-            ? Image.asset(
-                iconPath,
-                width: 30,
-              )
-            : null,
+        trailing: rtl ? Icon(icon) : null,
         onTap: () {
           _drawerController.close!.call();
           setState(() {

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -9,20 +10,22 @@ import 'package:product_app/models/customer.dart';
 import 'package:product_app/models/product.dart';
 import 'package:product_app/models/receipt.dart';
 import 'package:product_app/models/theme.dart';
-import 'package:product_app/screens/add_receipt.dart';
 import 'package:product_app/screens/orders_page.dart';
+import 'package:product_app/server/authintication_api.dart';
+import 'package:product_app/utils/my_icons_icons.dart';
 import 'package:product_app/widgets/app_bar.dart';
 import 'package:product_app/widgets/receipt_widget.dart';
 import 'package:responsive_s/responsive_s.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class CashierPage extends StatefulWidget {
+  const CashierPage({Key? key}) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _CashierPageState createState() => _CashierPageState();
 }
 
-class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
+class _CashierPageState extends State<CashierPage>
+    with TickerProviderStateMixin {
   late Responsive _responsive;
   late final AnimationController _searchController;
   bool hide = true;
@@ -60,13 +63,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         products: List.generate(
             12,
             (index) => CustomerProduct(
-                name: 'name', type: 'type', price: 10, count: 10)),
+              unit: '',
+                productID: '',
+                name: 'name', type: 'type', individualPrice: 10, count: 10)),
         customer: Customer(
-            name: 'ahmad',
-            imageURL:
-                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRM5iEj1qbLA8v0RsIuKWCxEN5Jo54thBUeDA&usqp=CAU',
-            installment: 10,
-            location: 'Al tal'),
+           receipts: [],
+           customerId: '',
+           installment: 10,),
         offer: 0,
       ),
     );
@@ -132,13 +135,24 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   _addReceipt() async {
-    _optionController.isCompleted ? _optionController.reverse() : null;
-    Receipt? newReceipt = await Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => const AddReceipt()));
-    if (newReceipt != null) {
-      _receiptList.insert(0, newReceipt);
-      _listKey.currentState!.insertItem(0);
-    }
+    var a = await FirebaseFirestore.instance.collection('/sellers');
+    var b = a.doc(AuthenticationApi().gitUserUid);
+    debugPrint('-----------------------${b.path}');
+    b.set({
+      'uid': AuthenticationApi().gitUserUid,
+    }).then((value) async {
+      var w = await FirebaseFirestore.instance.collection('${b.path}/repo');
+      w.doc('JTQN1YluR6H0xm').get().then((value) => print(value.data()));
+    });
+    a.get().then((value) => print(value));
+
+    // _optionController.isCompleted ? _optionController.reverse() : null;
+    // Receipt? newReceipt = await Navigator.of(context)
+    //     .push(MaterialPageRoute(builder: (context) => const AddReceipt()));
+    // if (newReceipt != null) {
+    //   _receiptList.insert(0, newReceipt);
+    //   _listKey.currentState!.insertItem(0);
+    // }
   }
 
   void _showOptionButton(int index) {
@@ -154,64 +168,68 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   void _makeOffer() async {
-    if(_pressedButtonIndex!=null) {
+    if (_pressedButtonIndex != null) {
       String? _offerString;
       double? _offer = await showDialog(
-        context: context,
-        builder: (context) => Dialog(
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                    children: [
-                  TextFormField(
-                    autovalidateMode: AutovalidateMode.always,
-                    validator: (text){
-                     double? res= double.tryParse(text??'');
-                     if(res==null) {
-                       _offerString='';
-                       return 'This input is un correct';
-
-                     } else{
-                       _offerString=res.toString();
-                     }
-                    },
-                    keyboardType:TextInputType.number ,
-                    onChanged: (text){
-                      _offerString=text;
-                    },
-                    decoration: InputDecoration(
-                        labelText: 'Offer',labelStyle: TextStyle(
-                      color: Colors.black,
-                      fontSize: _responsive.responsiveValue(forUnInitialDevices: 4)
-                    )),
-                  ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          ElevatedButton(onPressed: (){
-                            if(_offerString!=null) {
-                              Navigator.of(context).pop(double.tryParse(_offerString??''));
-                            }
-                          }, child:const Text("Done")),
-                          SizedBox(width: _responsive.responsiveWidth(forUnInitialDevices: 3),),
-                          ElevatedButton(onPressed: (){
-                            Navigator.of(context).pop();
-                          }, child:const Text("Cancel"))
-                        ],
-                      )
-                ]),
-              ),
-            ));
-      if(_offer==null){
+          context: context,
+          builder: (context) => Dialog(
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(mainAxisSize: MainAxisSize.min, children: [
+                    TextFormField(
+                      autovalidateMode: AutovalidateMode.always,
+                      validator: (text) {
+                        double? res = double.tryParse(text ?? '');
+                        if (res == null) {
+                          _offerString = '';
+                          return 'This input is un correct';
+                        } else {
+                          _offerString = res.toString();
+                        }
+                      },
+                      keyboardType: TextInputType.number,
+                      onChanged: (text) {
+                        _offerString = text;
+                      },
+                      decoration: InputDecoration(
+                          labelText: 'Offer',
+                          labelStyle: TextStyle(
+                              color: Colors.black,
+                              fontSize: _responsive.responsiveValue(
+                                  forUnInitialDevices: 4))),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        ElevatedButton(
+                            onPressed: () {
+                              if (_offerString != null) {
+                                Navigator.of(context)
+                                    .pop(double.tryParse(_offerString ?? ''));
+                              }
+                            },
+                            child: const Text("Done")),
+                        SizedBox(
+                          width: _responsive.responsiveWidth(
+                              forUnInitialDevices: 3),
+                        ),
+                        ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text("Cancel"))
+                      ],
+                    )
+                  ]),
+                ),
+              ));
+      if (_offer == null) {
         return;
-      }else{
-     _receiptList[_pressedButtonIndex!].offer=_offer;
-     setState(() {});
+      } else {
+        _receiptList[_pressedButtonIndex!].offer = _offer;
+        setState(() {});
       }
     }
-
-
   }
 
   void _deleteReceipt() {
@@ -236,7 +254,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     _themeProvider = SettingBlocProvider.of(context).theme;
-    _responsive = Responsive(context,removePadding: false);
+    _responsive = Responsive(context, removePadding: false);
     return Scaffold(
         floatingActionButton: SlideTransition(
           position: _position,
@@ -318,7 +336,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               onPressed: _deleteReceipt,
               tooltipMessage: 'delete',
               positionAnimation: _deleteAnimation,
-              child: const Icon(Icons.delete),
+              child: const Icon(MyIcons.trash),
             ),
             buildSlideTransition(
               tooltipMessage: 'print',
@@ -329,12 +347,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               onPressed: _makeOffer,
               tooltipMessage: 'offer',
               positionAnimation: _makeOfferAnimation,
-              child: const Icon(Icons.local_offer),
+              child: const Icon(MyIcons.tag),
             ),
             buildSlideTransition(
               tooltipMessage: 'sell',
               positionAnimation: _sellAnimation,
-              child: const Icon(Icons.monetization_on),
+              child: const Icon(MyIcons.dollar),
             ),
             Align(
               alignment: Alignment.bottomCenter,

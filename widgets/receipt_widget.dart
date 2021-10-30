@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:product_app/bloc/setting_bloc_provider.dart';
 import 'package:product_app/classes/name_capitalization.dart';
-import 'package:product_app/models/product.dart';
 import 'package:product_app/models/receipt.dart';
 import 'package:product_app/widgets/product_table.dart';
 import 'package:product_app/widgets/product_widget.dart';
@@ -35,7 +34,7 @@ class _ReceiptWidgetState extends State<ReceiptWidget>
 
   List<ProductWidget> _getProducts() {
     return widget.receipt.products
-        .map((customerProd) => ProductWidget(customerProd as CustomerProduct))
+        .map((customerProd) => ProductWidget(customerProd ))
         .toList();
   }
 
@@ -89,7 +88,7 @@ class _ReceiptWidgetState extends State<ReceiptWidget>
               },
               isThreeLine: true,
               subtitle: Text(
-                widget.receipt.customer.location,
+                widget.receipt.customer.customerId,
                 style: TextStyle(
                   fontSize:
                   _responsive.responsiveValue(forUnInitialDevices: 4),
@@ -121,7 +120,7 @@ class _ReceiptWidgetState extends State<ReceiptWidget>
                 ],
               ),
               title: Text(
-                nameCapitalization(widget.receipt.customer.name),
+                nameCapitalization(widget.receipt.customer.customerId),
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               leading: CircleAvatar(
@@ -129,7 +128,7 @@ class _ReceiptWidgetState extends State<ReceiptWidget>
                 onBackgroundImageError: (image, stackTrack) =>
                     Image.asset('assets/images/placeholder.png'),
                 backgroundImage:
-                NetworkImage(widget.receipt.customer.imageURL ?? ''),
+                NetworkImage(widget.receipt.customer.customerId ?? ''),
               ),
             ),
           ),

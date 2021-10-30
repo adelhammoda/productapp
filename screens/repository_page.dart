@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
@@ -18,134 +19,139 @@ class _RepositoryPageState extends State<RepositoryPage>
     with SingleTickerProviderStateMixin {
   late Responsive _responsive;
   late Animation<double> _scroll;
+  Timer? _forMoveToAnotherPage;
   late final AnimationController _scrollc;
   int _pageNumber = 0;
   double _degree = 0.0;
   final List<List<RepositoryProduct>> _listProducts = [
     [
       RepositoryProduct(
-          imageURl:
+          imageURL:
               'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQOHY3jxurAR-T99Bb-nZml8yWAPinhlP6UkA&usqp=CAU',
-          countInRepo: 3,
+          count: 3,
           name: 'wine',
           type: 'drinks',
-          price: 30),
+          individualPrice: 30,
+          id: '',
+          unit: ''),
       RepositoryProduct(
-          imageURl:
+          imageURL:
               'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSt-s1zgy79AwadQ9NablfP5xZM8PTA29ApBA&usqp=CAU',
-          countInRepo: 4,
+          count: 4,
           name: 'clop',
           type: 'electronics',
-          price: 100),
+          individualPrice: 100, unit: '', id: '', ),
       RepositoryProduct(
-          imageURl:
+          imageURL:
               'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR49H97ZtmwJwBxZ2FjAuq0y2m84SFLTspdgA&usqp=CAU',
-          countInRepo: 15,
+          count: 15,
           name: 'wristwatch',
           type: 'electronics',
-          price: 57.20),
+          individualPrice: 57.20, id: '', unit: ''),
       RepositoryProduct(
-          imageURl:
+          imageURL:
               'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyGWiLqhA3UmX5ZcvEHjOyc0maWgzWhFIfbg&usqp=CAU',
-          countInRepo: 150,
+          count: 150,
           name: 'shampoo',
           type: 'cleaning',
-          price: 11.22),
+          individualPrice: 11.22,id: '',unit: ''),
       RepositoryProduct(
-          imageURl:
+          imageURL:
               'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTI6t5HV6PawgD6Sc017ccjZLm39JY19mFQFA&usqp=CAU',
-          countInRepo: 5,
+          count: 5,
           name: 'charger',
           type: 'electronics',
-          price: 32.78),
+          individualPrice: 32.78,
+      unit: '',
+      id: ''),
       RepositoryProduct(
-          imageURl:
+          imageURL:
               'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUb1ADuhsC2l8Yf7mGtI49i5lfvSZm2BeIww&usqp=CAU',
-          countInRepo: 10,
+          count: 10,
           name: 'Sun Classes',
           type: 'wears',
-          price: 65.33),
+          individualPrice: 65.33, id: '', unit: ''),
       RepositoryProduct(
-          imageURl:
+          imageURL:
               'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEQWP5oJP7nRytBIbbxpmrHetm8pukOYuTgw&usqp=CAU',
-          countInRepo: 1000,
+          count: 1000,
           name: 'Shampoo',
           type: 'cleaning',
-          price: 15.13),
+          individualPrice: 15.13, id: '', unit: ''),
       RepositoryProduct(
-          imageURl:
+          imageURL:
               'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBh3t9RH7X20oO6uhZPzAwVRxcKpnJEEMK2w&usqp=CAU',
-          countInRepo: 10122,
+          count: 10122,
           name: 'Spoon',
           type: 'cleaning',
-          price: 15.13),
+          individualPrice: 15.13, id: '', unit: ''),
     ],
     [
       RepositoryProduct(
-          imageURl:
+          imageURL:
               'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoemUxDZ8Y3SZ-wg6jBIqK7lX3LRqZbCaPzg&usqp=CAU',
-          countInRepo: 3,
+          count: 3,
           name: 'Shoes',
           type: 'Clothes',
-          price: 40),
+          individualPrice: 40, id: '', unit: ''),
       RepositoryProduct(
-          imageURl:
+          imageURL:
               'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtw-AIXKWvZW0KziSqb5FePpimzDgsnXW57g&usqp=CAU',
-          countInRepo: 2,
+          count: 2,
           name: 'Camera',
           type: 'electronics',
-          price: 100),
+          individualPrice: 100, id: '', unit: ''),
       RepositoryProduct(
-          imageURl:
+          imageURL:
               'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQanCFp_9pTfwIUe0RdbwdiJNbAY1D21Wo98Q&usqp=CAU',
-          countInRepo: 10,
+          count: 10,
           name: 'Leather bag',
           type: 'Woman wear',
-          price: 55.3),
+          individualPrice: 55.3, id: '', unit: ''),
     ],
     [
       RepositoryProduct(
-          imageURl:
+          imageURL:
               'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpdZjoJAVZkFD_CxJnJ1bEeEtNZsw9WQQhDg&usqp=CAU',
-          countInRepo: 1,
+          count: 1,
           name: 'Phone',
           type: 'electronics',
-          price: 357.20),
+          individualPrice: 357.20, id: '', unit: ''),
       RepositoryProduct(
-          imageURl:
+          imageURL:
               'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSv0DwgNYlj4xvYJtaTOBUxtJ8LLNLyVfvKBw&usqp=CAU',
-          countInRepo: 150,
+          count: 150,
           name: 'BackBag',
           type: 'Wear',
-          price: 17.22),
+          individualPrice: 17.22, id: '', unit: ''),
       RepositoryProduct(
-          imageURl:
+          imageURL:
               'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwxupSYkEmuwMdvMuwGLTx_U74QI961unrSQ&usqp=CAU',
-          countInRepo: 15,
+          count: 15,
           name: 'Football',
           type: 'Game',
-          price: 32.78),
+          individualPrice: 32.78, id: '', unit: ''),
       RepositoryProduct(
-          imageURl:
+          imageURL:
               'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_T66ivOhI09Ym9lgm8MD5F2LUTWTbsE5cWA&usqp=CAU',
-          countInRepo: 10,
+          count: 10,
           name: 'Headphone',
           type: 'Electronic',
-          price: 62.13),
+          individualPrice: 62.13, id: '', unit: ''),
       RepositoryProduct(
-          imageURl:
+          imageURL:
               'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqyBqGq5u6TBGBBITV3w6mg-oVpjH0njBDCQ&usqp=CAU',
-          countInRepo: 10,
+          count: 10,
           name: 'Mouse',
           type: 'Electronic',
-          price: 25.25),
+          individualPrice: 25.25, id: '', unit: ''),
       RepositoryProduct(
-          imageURl:
+          imageURL:
               'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSb5baL-9dld5POsD5VF8g-zxxR-GigU5Lmng&usqp=CAU',
-          countInRepo: 10122,
+          count: 10122,
           name: 'wristwatch',
           type: 'Wear',
-          price: 44.13),
+          individualPrice: 44.13, id: '', unit: ''),
     ]
   ];
   bool _lock = false;
@@ -155,19 +161,29 @@ class _RepositoryPageState extends State<RepositoryPage>
   void initState() {
     _scrollc = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 600));
-
     _scroll = Tween(begin: 0.0, end: 180.0)
         .animate(CurvedAnimation(parent: _scrollc, curve: Curves.easeOutBack));
-    _scrollc.addListener(_listen);
+    // _scrollc.addListener(_listen);
     super.initState();
+    _scrollc.addStatusListener((status) {
+      print(status);
+      if (status == AnimationStatus.forward) {
+        _forMoveToAnotherPage = Timer(const Duration(milliseconds: 300), () {
+          _increment();
+        });
+      }
+      if (status == AnimationStatus.dismissed) {
+        _forMoveToAnotherPage = Timer(const Duration(milliseconds: 300), () {
+          _decrement();
+        });
+      }
+    });
   }
 
   void _listen() {
-    // if (!_scrollc.isAnimating) {
     _degree = _scroll.value;
-    if (_scroll.value > 90) {
-      sign < 0 ? _increment() : _decrement();
-    }
+    // if (_scroll.value > 90) {
+    //   sign < 0 ? _increment() : _decrement();
     // }
   }
 
@@ -176,39 +192,36 @@ class _RepositoryPageState extends State<RepositoryPage>
 
     double start = 0;
     if (_pageNumber == 0 && sign == 1) {
-      _lock=false;
+      _lock = false;
       start = 190;
     } else if (_pageNumber == _listProducts.length - 1 && sign == -1) {
-      _lock=false;
+      _lock = false;
       start = 185;
     }
     _scroll = Tween(begin: start, end: 180.0)
         .animate(CurvedAnimation(parent: _scrollc, curve: Curves.easeOutBack));
     _scrollc.reset();
-    _scrollc.forward();
+    sign > 0 ? _scrollc.forward() : _scrollc.reverse();
     // }
   }
 
   void _increment() {
-    debugPrint('i am in increment  ///lock:$_lock');
-    if (_lock && _pageNumber < _listProducts.length - 1) {
+    if (_pageNumber < _listProducts.length - 1) {
       _pageNumber++;
     }
-    _lock = false;
+    // _lock = false;
   }
 
   void _decrement() {
-    debugPrint('i am in decrement ///lock:$_lock \n ');
-    // debugPrint('page number $_pageNumber \n sing  $sign lock:$_lock');
-    if (_pageNumber > 0 && _lock) {
+    if (_pageNumber > 0) {
       _pageNumber--;
     }
-    _lock = false;
+    // _lock = false;
   }
 
   @override
   void dispose() {
-    _scrollc.removeListener(_listen);
+    // _scrollc.removeListener(_listen);
     super.dispose();
   }
 
@@ -243,20 +256,20 @@ class _RepositoryPageState extends State<RepositoryPage>
             vertical: _responsive.responsiveWidth(forUnInitialDevices: 5),
             horizontal: 8),
         child: GestureDetector(
-          onVerticalDragStart: (dragStart) {
-
-            // if (!_scrollc.isAnimating) {
-            // if (_pageNumber == 0 && sign == 1) {
-            //   _lock = false;
-            // } else if ((_pageNumber == _listProducts.length - 1) &&
-            //     sign == -1) {
-            //   _lock = false;
-            // } else {
-              _lock = true;
-              // }
-            // }
-            // debugPrint('sign in start drag/// $sign');
-          },
+          // onVerticalDragStart: (dragStart) {
+          //           //
+          //           //   // if (!_scrollc.isAnimating) {
+          //           //   // if (_pageNumber == 0 && sign == 1) {
+          //           //   //   _lock = false;
+          //           //   // } else if ((_pageNumber == _listProducts.length - 1) &&
+          //           //   //     sign == -1) {
+          //           //   //   _lock = false;
+          //           //   // } else {
+          //           //     _lock = true;
+          //           //     // }
+          //           //   // }
+          //           //   // debugPrint('sign in start drag/// $sign');
+          //           // },
           onVerticalDragUpdate: (DragUpdateDetails dragDawn) {
             sign = dragDawn.delta.dy > 0 ? 1 : -1;
           },
@@ -329,7 +342,7 @@ class _RepositoryPageState extends State<RepositoryPage>
                           //TODO:change the tag of this hero.
                           child: Hero(
                               transitionOnUserGestures: true,
-                              tag: _repositoryProduct[index].imageURl,
+                              tag: _repositoryProduct[index].imageURL,
                               child: Placeholder()))),
                 ),
               ),
@@ -379,7 +392,7 @@ class _RepositoryPageState extends State<RepositoryPage>
                   )
                 ])),
             Text(
-              '${_repositoryProduct[index].price} \$',
+              '${_repositoryProduct[index].individualPrice} \$',
               style: TextStyle(
                   fontSize:
                       _responsive.responsiveValue(forUnInitialDevices: 5)),
