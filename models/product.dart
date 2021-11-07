@@ -1,7 +1,6 @@
 import 'dart:core';
 
 
-
 abstract class Product {
   late final String id;
   late final String name;
@@ -39,7 +38,8 @@ class RepositoryProduct implements Product {
     required this.name,
   });
 
-  factory RepositoryProduct.fromJSON(Map<String, dynamic> data,String productID) {
+  factory RepositoryProduct.fromJSON(Map<String, dynamic> data,
+      String productID) {
     return RepositoryProduct(
         imageURL: data['imageURL'],
         id: productID,
@@ -62,4 +62,43 @@ class RepositoryProduct implements Product {
   }
 }
 
+class CustomerProduct implements Product {
+  @override
+  String id;
 
+  @override
+  double individualPrice;
+
+  @override
+  String name;
+
+  @override
+  String type;
+
+  @override
+  String unit;
+
+  int orderedCount = 0;
+
+  CustomerProduct({
+    required this.id,
+    required this.name,
+    required this.individualPrice,
+    required this.unit,
+    required this.type,
+    this.orderedCount = 0
+  });
+
+
+  factory CustomerProduct.fromRepo(RepositoryProduct repoProduct, int count){
+    return CustomerProduct(
+        id: repoProduct.id,
+        name: repoProduct.name,
+        individualPrice: repoProduct.individualPrice,
+        unit: repoProduct.unit,
+        type: repoProduct.unit,
+        orderedCount: count);
+  }
+
+
+}

@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
-import 'package:product_app/bloc/authentication_bloc_provider.dart';
+import 'package:product_app/bloc/authentication_provider.dart';
 import 'package:product_app/bloc/login_bloc.dart';
 import 'package:product_app/bloc/setting_bloc_provider.dart';
 import 'package:product_app/models/theme.dart';
@@ -52,7 +52,7 @@ class _LogInState extends State<LogIn> with SingleTickerProviderStateMixin {
   ///
   @override
   void didChangeDependencies() {
-    _provider = AuthenticationBlocProvider.of(context).loginBloc;
+    _provider = AuthenticationProvider.of(context).loginBloc;
     super.didChangeDependencies();
   }
 
@@ -243,7 +243,7 @@ class _LogInState extends State<LogIn> with SingleTickerProviderStateMixin {
               height: _responsive.responsiveHeight(forUnInitialDevices: 1),
             ),
             StreamBuilder<String?>(
-                stream: _provider.name,
+                stream: _provider.email,
                 builder: (context, snapshot) {
                   return buildField(
                       validator: (text) {

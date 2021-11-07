@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:product_app/bloc/setting_bloc_provider.dart';
-import 'package:product_app/models/customer.dart';
 import 'package:product_app/models/product.dart';
 import 'package:product_app/models/receipt.dart';
 import 'package:product_app/widgets/app_bar.dart';
@@ -61,14 +60,10 @@ class _AddReceiptState extends State<AddReceipt> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).pop(Receipt(
-              customer: Customer(
-                customerId: '',
-                  receipts: [],
-                  installment: 0.0,),
-              products: _products
-                  .map((productWidget) => productWidget.product)
-                  .toList(),
-              offer: 0.0));
+              products: _products.map((productWidget) => {'': ''}).toList(),
+              offer: 0.0,
+              receiptID: '',
+              customerID: ''));
         },
         child: const Icon(Icons.done),
       ),
@@ -107,8 +102,8 @@ class _AddReceiptState extends State<AddReceipt> {
                       if (snapshot.data != null) {
                         //TODO:add id to the product.
                         if (_products.isNotEmpty) {
-                          if (snapshot.data!.product.productID !=
-                              _products.last.product.productID) {
+                          if (snapshot.data!.product.id !=
+                              _products.last.product.id) {
                             _products.add(snapshot.data!);
                           }
                         } else {
@@ -341,12 +336,10 @@ class ProductTile extends StatelessWidget {
             0;
         if (count > 0) {
           sink.add(ProductWidget(CustomerProduct(
-              productID: '1',
               unit: 'kilo',
               individualPrice: 100,
               type: 'American Typewriter,',
-              name: 'Bodo Ornaments',
-              count: count.toInt())));
+              name: 'Bodo Ornaments',id: '',orderedCount: 2)));
         }
       },
       //TODO:add background image to circle avatar.

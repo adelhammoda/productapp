@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
-import 'package:product_app/bloc/authentication_bloc_provider.dart';
+import 'package:product_app/bloc/authentication_provider.dart';
 import 'package:product_app/bloc/login_bloc.dart';
 import 'package:product_app/bloc/setting_bloc_provider.dart';
 import 'package:product_app/models/theme.dart';
@@ -24,7 +24,7 @@ class _SettingPageState extends State<SettingPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _provider = AuthenticationBlocProvider.of(context).loginBloc;
+    _provider = AuthenticationProvider.of(context).loginBloc;
   }
 
   @override

@@ -1,3 +1,4 @@
+import 'package:product_app/models/seller.dart';
 import 'package:product_app/utils/themes.dart';
 import 'package:product_app/models/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -5,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Setting {
   MyTheme theme = themes[0];
   bool isRTL = false;
+  Seller? seller;
   String language = 'EN';
   late final SharedPreferences _storage;
 

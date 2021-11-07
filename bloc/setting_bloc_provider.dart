@@ -1,8 +1,8 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:product_app/models/seller.dart';
 import 'package:product_app/models/setting.dart';
 import 'package:product_app/models/theme.dart';
-import 'package:product_app/utils/themes.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 
 class SettingProvider extends StatefulWidget {
   final Widget child;
@@ -28,6 +28,11 @@ class _SettingProviderState extends State<SettingProvider> {
      _setting.changeTheme(name).then((value) {
        setState(() {});
      });
+  }
+
+  void updateSeller(Seller seller){
+    _setting.seller=seller;
+    setState(() {});
   }
 
   @override
@@ -56,5 +61,6 @@ class SettingBlocProvider extends InheritedWidget {
 
   @override
   bool updateShouldNotify(SettingBlocProvider oldWidget) =>
+  //TODO:compare between tow setting with theme and seller
       oldWidget.setting.compareTo(setting);
 }

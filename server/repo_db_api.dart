@@ -24,14 +24,27 @@ class RepositoryDBApi extends DataBase_API {
           .then((value) => true)
           .catchError((onError) => false);
 
-  Future<List<RepositoryProduct>?> getAllProduct() => getDocuments()
-      .then((value) => value == null
+  Stream<List<RepositoryProduct>?> getAllProduct() => getDocumentsAsStream()
+      .map((value) => value == null
           ? null
           : value.docs
               .map<RepositoryProduct>((e) => RepositoryProduct.fromJSON(
                   e.data() as Map<String, dynamic>, e.id))
               .toList())
-      .catchError((onError) => null);
+      .handleError((onError) => null);
+
+  Stream<List<RepositoryProduct>?> getProductWhere({
+    required bool Function(RepositoryProduct product) where,
+  }) =>
+      getDocumentsAsStream()
+          .map((value) => value == null
+              ? null
+              : value.docs
+                  .map<RepositoryProduct>((e) => RepositoryProduct.fromJSON(
+                      e.data() as Map<String, dynamic>, e.id))
+                  .where(where)
+                  .toList())
+          .handleError((onError) => null);
 
   Future<RepositoryProduct?> getProduct(String productID) =>
       getDocument(productID)

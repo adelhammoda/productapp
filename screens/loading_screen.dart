@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:product_app/bloc/authentication_bloc.dart';
-import 'package:product_app/bloc/authentication_bloc_provider.dart';
+import 'package:product_app/bloc/authentication_provider.dart';
 import 'package:product_app/bloc/login_bloc.dart';
 import 'package:product_app/bloc/setting_bloc_provider.dart';
 import 'package:product_app/classes/custom_page_route.dart';
@@ -27,7 +27,7 @@ class _LoadingPageState extends State<LoadingPage> {
     super.initState();
 
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-      _provider = AuthenticationBlocProvider.of(context).loginBloc;
+      _provider = AuthenticationProvider.of(context).loginBloc;
       Timer(const Duration(seconds: 3), () async {
         SettingBlocProvider.of(context).getSaveTheme();
         await rootBundle
@@ -98,7 +98,7 @@ class Switcher extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _provider = AuthenticationBlocProvider.of(context).authenticationBloc;
+    _provider = AuthenticationProvider.of(context).authenticationBloc;
     return StreamBuilder<User?>(
       stream: _provider.userAuthentication,
       builder: (context, AsyncSnapshot<User?> snapshot) {

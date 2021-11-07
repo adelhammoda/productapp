@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:product_app/models/product.dart';
 import 'package:product_app/models/receipt.dart';
 import 'package:product_app/server/database.dart';
+import 'package:product_app/server/repo_db_api.dart';
 
 class ReceiptDBApi extends DataBase_API {
   ReceiptDBApi() : super('/receipts');
@@ -36,5 +38,21 @@ class ReceiptDBApi extends DataBase_API {
   Future<bool> deleteReceipt(String receiptID) =>
       delete(receiptID).then((value) => true).catchError((onError) => false);
 
-
+//TODO:test this function
+  //TODO:discuss where this function must  be  :) ..
+  Future<List<CustomerProduct>?> getReceiptProducts(Receipt receipt) async {
+    RepositoryDBApi repo = RepositoryDBApi();
+    List<CustomerProduct>? repoProducts = [];
+    List<Map<String, dynamic>> products = receipt.products;
+    products.forEach((map) async {
+      RepositoryProduct? p = await repo.getProduct(map['productID']);
+      if (p == null) {
+        repoProducts = null;
+        return;
+      } else {
+        repoProducts!.add(CustomerProduct.fromRepo(p, map['count']));
+      }
+    });
+    return repoProducts;
+  }
 }

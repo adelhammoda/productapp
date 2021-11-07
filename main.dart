@@ -1,12 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:product_app/bloc/authentication_bloc.dart';
 import 'package:product_app/bloc/setting_bloc_provider.dart';
 import 'package:product_app/screens/loading_screen.dart';
 
-import 'bloc/authentication_bloc_provider.dart';
-import 'bloc/login_bloc.dart';
+import 'bloc/auth_bloc.dart';
+import 'bloc/authentication_provider.dart';
 import 'server/authintication_api.dart';
 
 void main() async {
@@ -22,7 +21,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = SettingBlocProvider.of(context).theme;
-    return AuthenticationBlocProvider(
+    return AuthenticationProvider(
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Product app',
@@ -48,7 +47,6 @@ class MyApp extends StatelessWidget {
           // home:const ZoomDrawerWidget(),
           home: const LoadingPage()),
       authenticationBloc: AuthenticationBloc(AuthenticationApi()),
-      loginBloc: LoginBloc(AuthenticationApi()),
     );
   }
 }
