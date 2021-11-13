@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:product_app/bloc/authentication_provider.dart';
 import 'package:product_app/bloc/login_bloc.dart';
+import 'package:product_app/bloc/login_provider.dart';
 import 'package:product_app/bloc/setting_bloc_provider.dart';
 import 'package:product_app/models/theme.dart';
 import 'package:product_app/utils/themes.dart';
@@ -24,7 +25,7 @@ class _SettingPageState extends State<SettingPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _provider = AuthenticationProvider.of(context).loginBloc;
+    _provider = LoginProvider.of(context).loginBloc;
   }
 
   @override
@@ -98,7 +99,7 @@ class _SettingPageState extends State<SettingPage> {
                           _responsive.responsiveValue(forUnInitialDevices: 4))),
                   tileColor: _theme.backGroundColor,
                   onTap: () {
-                    _provider.singOut();
+                   //TODO:add sign out methode here.
                   },
                   trailing: Icon(
                     Icons.logout,

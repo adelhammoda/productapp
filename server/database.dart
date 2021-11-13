@@ -21,13 +21,12 @@ abstract class DataBase {
 
 class DataBase_API implements DataBase {
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
-  final String _collectionPath = "/seller/${AuthenticationApi().gitUserUid}";
+  final String _collectionPath = "/seller/${AuthenticationApi.gitUserUid}";
   late final CollectionReference _collectionReference;
 
   DataBase_API(String path) {
-
     _collectionReference = _fireStore.collection(_collectionPath + path);
-   }
+  }
 
   @override
   Future<DocumentReference> createDocument(Map<String, dynamic> data) {
@@ -59,7 +58,7 @@ class DataBase_API implements DataBase {
   }
 
   @override
-  Stream<Map<String,dynamic>> getDocumentAsStream(String documentID) {
+  Stream<Map<String, dynamic>> getDocumentAsStream(String documentID) {
     return _collectionReference
         .doc(documentID)
         .get()
@@ -70,9 +69,6 @@ class DataBase_API implements DataBase {
 
   @override
   Stream<QuerySnapshot<Object?>?> getDocumentsAsStream() {
-    return  _collectionReference
-        .get()
-        .asStream();
-
+    return _collectionReference.get().asStream();
   }
 }

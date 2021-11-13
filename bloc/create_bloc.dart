@@ -19,7 +19,7 @@ class CreateBloc with Validator {
   }
 
   Future<bool?> createNewSeller(Seller seller) {
-    if(_authenticationApi.gitUserUid==null)
+    if(AuthenticationApi.gitUserUid==null)
       return Future<bool?>(()=>null);
     return _sellerDBApi.createSeller(seller);
   }

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:product_app/bloc/setting_bloc_provider.dart';
 import 'package:product_app/classes/name_capitalization.dart';
+import 'package:product_app/models/product.dart';
 import 'package:product_app/models/receipt.dart';
 import 'package:product_app/widgets/product_table.dart';
 import 'package:product_app/widgets/product_widget.dart';
@@ -34,7 +35,15 @@ class _ReceiptWidgetState extends State<ReceiptWidget>
 
   List<ProductWidget> _getProducts() {
     return widget.receipt.products
-        .map((customerProd) => ProductWidget(customerProd ))
+        .map((customerProd) => ProductWidget( CustomerProduct(
+        name: 'customer product name',
+      individualPrice: 12 ,
+      orderedCount: 1,
+      id: '1',
+      type: 'type of costumer product',
+      unit: 'kelo'
+
+    )))
         .toList();
   }
 
@@ -88,7 +97,7 @@ class _ReceiptWidgetState extends State<ReceiptWidget>
               },
               isThreeLine: true,
               subtitle: Text(
-                widget.receipt.customer.customerId,
+                widget.receipt.customerID,
                 style: TextStyle(
                   fontSize:
                   _responsive.responsiveValue(forUnInitialDevices: 4),
@@ -100,7 +109,7 @@ class _ReceiptWidgetState extends State<ReceiptWidget>
                 children: [
                   //TODO:add the country of payment.
                   Text(
-                    widget.receipt.calculateTotalPrice(),
+                    'TODO: ',
                     style: TextStyle(
                       fontSize:
                       _responsive.responsiveValue(forUnInitialDevices: 5),
@@ -120,7 +129,7 @@ class _ReceiptWidgetState extends State<ReceiptWidget>
                 ],
               ),
               title: Text(
-                nameCapitalization(widget.receipt.customer.customerId),
+                nameCapitalization(widget.receipt.customerID),
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               leading: CircleAvatar(
@@ -128,7 +137,7 @@ class _ReceiptWidgetState extends State<ReceiptWidget>
                 onBackgroundImageError: (image, stackTrack) =>
                     Image.asset('assets/images/placeholder.png'),
                 backgroundImage:
-                NetworkImage(widget.receipt.customer.customerId ?? ''),
+                NetworkImage(widget.receipt.customerID),
               ),
             ),
           ),

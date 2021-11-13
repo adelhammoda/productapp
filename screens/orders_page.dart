@@ -48,40 +48,37 @@ class _OrderPageState extends State<OrderPage> with TickerProviderStateMixin {
           buildPageView(List.generate(
               6,
               (index) => Receipt(
-                  offer: 0,
-                  customer: Customer(
-                    //
-                    installment: 12000,
-                    receipts: [],
-                    customerId: ''
-                  ),
+                  offer: 100,
+                  customerID: '',
+                  receiptID: '',
                   products: List.generate(
                       5,
-                      (index) => CustomerProduct(
-                          name: 'product name',
-                          type: 'sapon',
-                          productID: '',
-                          unit: '',
-                          individualPrice: 1000,
-                          count: 12))))),
+                          (index) =>
+                      {
+                        '1':  CustomerProduct(
+                            id: '1',
+                            unit: '',
+                            name: 'product name',
+                            type: 'sapon',
+                            individualPrice: 11000,orderedCount: 2)
+                      })))),
           buildPageView(List.generate(
               1,
               (index) => Receipt(
                   offer: 100,
-                  customer: Customer(
-                  customerId: '',
-                    receipts: [],
-                    installment: 1120,
-                  ),
+                  customerID: '',
+                  receiptID: '',
                   products: List.generate(
                       5,
-                      (index) => CustomerProduct(
-                        productID: ''  ,
-                          unit: '',
-                          name: 'product name',
-                          type: 'sapon',
-                          individualPrice: 11000,
-                          count: 2))))),
+                      (index) =>
+                      {
+                          '1':  CustomerProduct(
+                                id: '1',
+                                unit: '',
+                                name: 'product name',
+                                type: 'sapon',
+                                individualPrice: 11000,orderedCount: 2)
+                          })))),
         ],
         // controller: ,
       ),
@@ -166,11 +163,8 @@ class _OrderPageState extends State<OrderPage> with TickerProviderStateMixin {
                       },
                       receipt: Receipt(
                         offer: receipt[index].offer,
-                        customer: Customer(
-                          installment: receipt[index].customer.installment,
-                          customerId: '',
-                          receipts: []
-                        ),
+                        customerID: '1',
+                        receiptID: '',
                         products: receipt[index].products,
                       )),
                 );

@@ -7,7 +7,7 @@ class AuthenticationApi {
 
   AuthenticationApi();
 
-  String? get gitUserUid => _auth.currentUser?.uid;
+  static String? get gitUserUid => FirebaseAuth.instance.currentUser?.uid;
 
   Stream<User?> get gitUserState => _auth.userChanges();
 

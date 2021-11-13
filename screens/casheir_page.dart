@@ -6,7 +6,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:lottie/lottie.dart';
 import 'package:product_app/bloc/setting_bloc_provider.dart';
-import 'package:product_app/models/customer.dart';
 import 'package:product_app/models/product.dart';
 import 'package:product_app/models/receipt.dart';
 import 'package:product_app/models/theme.dart';
@@ -59,21 +58,20 @@ class _CashierPageState extends State<CashierPage>
   void initState() {
     _receiptList = List.generate(
       2,
-      (index) => Receipt(
-        products: List.generate(
-            12,
-            (index) => CustomerProduct(
-              unit: '',
-                productID: '',
-                name: 'name', type: 'type', individualPrice: 10, count: 10)),
-        customer: Customer(
-           receipts: [],
-           customerId: '',
-           installment: 10,),
-        offer: 0,
-      ),
-    );
-    _optionController = AnimationController(
+          (index) =>
+          Receipt(
+            products: List.generate(
+              12,
+                  (index) =>
+                  {'$index':CustomerProduct(name: 'product name',
+                      type: 'type',
+                      individualPrice: 12,
+                      unit: 'kilo',
+                      id: '1',
+                      orderedCount: 2)},
+            ), customerID: '1', receiptID: '',
+          ));
+      _optionController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
@@ -136,10 +134,10 @@ class _CashierPageState extends State<CashierPage>
 
   _addReceipt() async {
     var a = await FirebaseFirestore.instance.collection('/sellers');
-    var b = a.doc(AuthenticationApi().gitUserUid);
+    var b = a.doc(AuthenticationApi.gitUserUid);
     debugPrint('-----------------------${b.path}');
     b.set({
-      'uid': AuthenticationApi().gitUserUid,
+      'uid': AuthenticationApi.gitUserUid,
     }).then((value) async {
       var w = await FirebaseFirestore.instance.collection('${b.path}/repo');
       w.doc('JTQN1YluR6H0xm').get().then((value) => print(value.data()));
@@ -172,7 +170,8 @@ class _CashierPageState extends State<CashierPage>
       String? _offerString;
       double? _offer = await showDialog(
           context: context,
-          builder: (context) => Dialog(
+          builder: (context) =>
+              Dialog(
                 child: Padding(
                   padding: const EdgeInsets.all(10),
                   child: Column(mainAxisSize: MainAxisSize.min, children: [
@@ -237,7 +236,8 @@ class _CashierPageState extends State<CashierPage>
       final temp = _receiptList.removeAt(_pressedButtonIndex!);
       _listKey.currentState!.removeItem(
           _pressedButtonIndex!,
-          (context, animation) => SizeTransition(
+              (context, animation) =>
+              SizeTransition(
                 sizeFactor: animation,
                 child: ReceiptWidget(
                   key: UniqueKey(),
@@ -253,7 +253,9 @@ class _CashierPageState extends State<CashierPage>
 
   @override
   Widget build(BuildContext context) {
-    _themeProvider = SettingBlocProvider.of(context).theme;
+    _themeProvider = SettingBlocProvider
+        .of(context)
+        .theme;
     _responsive = Responsive(context, removePadding: false);
     return Scaffold(
         floatingActionButton: SlideTransition(
@@ -312,25 +314,25 @@ class _CashierPageState extends State<CashierPage>
                 child: _receiptList.isEmpty
                     ? const Center(child: Text('No Receipts . start add one'))
                     : AnimatedList(
-                        key: _listKey,
-                        controller: _listViewController,
-                        padding: EdgeInsets.only(
-                          top: _responsive.responsiveHeight(
-                              forUnInitialDevices: 18),
-                        ),
-                        physics: const BouncingScrollPhysics(),
-                        //TODO:add item count from real length
-                        initialItemCount: _receiptList.length,
-                        itemBuilder: (context, index, animation) =>
-                            SizeTransition(
-                                sizeFactor: animation,
-                                child: ReceiptWidget(
-                                  key: UniqueKey(),
-                                  onReceiptTaped: () =>
-                                      _showOptionButton(index),
-                                  receipt: _receiptList[index],
-                                )),
-                      )),
+                  key: _listKey,
+                  controller: _listViewController,
+                  padding: EdgeInsets.only(
+                    top: _responsive.responsiveHeight(
+                        forUnInitialDevices: 18),
+                  ),
+                  physics: const BouncingScrollPhysics(),
+                  //TODO:add item count from real length
+                  initialItemCount: _receiptList.length,
+                  itemBuilder: (context, index, animation) =>
+                      SizeTransition(
+                          sizeFactor: animation,
+                          child: ReceiptWidget(
+                            key: UniqueKey(),
+                            onReceiptTaped: () =>
+                                _showOptionButton(index),
+                            receipt: _receiptList[index],
+                          )),
+                )),
             buildSearchButton(context),
             buildSlideTransition(
               onPressed: _deleteReceipt,
@@ -374,7 +376,7 @@ class _CashierPageState extends State<CashierPage>
     return AnimatedContainer(
       duration: const Duration(milliseconds: 400),
       height:
-          _responsive.responsiveHeight(forUnInitialDevices: hide ? 15.3 : 24),
+      _responsive.responsiveHeight(forUnInitialDevices: hide ? 15.3 : 24),
       alignment: Alignment.bottomCenter,
       child: Row(
         children: [
@@ -425,11 +427,10 @@ class _CashierPageState extends State<CashierPage>
     );
   }
 
-  Widget buildSlideTransition(
-      {required Animation<Offset> positionAnimation,
-      required Widget child,
-      required String tooltipMessage,
-      void Function()? onPressed}) {
+  Widget buildSlideTransition({required Animation<Offset> positionAnimation,
+    required Widget child,
+    required String tooltipMessage,
+    void Function()? onPressed}) {
     //TODO: download icon from flutter icons website .
     return Visibility(
       visible: _visible,

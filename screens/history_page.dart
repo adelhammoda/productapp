@@ -192,21 +192,19 @@ class _HistoryPageState extends State<HistoryPage>
                   ReceiptWidget(
                     key: UniqueKey(),
                     visibility:true ,
-                    receipt: Receipt(
-                        offer: 0,
-                        products: List.generate(
-                            12,
-                            (index) => CustomerProduct(
-                              productID: '',
-                                unit: '',
-                                name: 'product',
-                                individualPrice: 12,
-                                type: 'type',
-                                count: 2)),
-                        customer: Customer(
-                            installment: 12,customerId: '',receipts: [])),
-                      onReceiptTaped:null,
-                  ),
+                    receipt:
+                            Receipt(
+                              products: List.generate(
+                                12,
+                                    (index) =>
+                                {'$index':CustomerProduct(name: 'product name',
+                                    type: 'type',
+                                    individualPrice: 12,
+                                    unit: 'kilo',
+                                    id: '1',
+                                    orderedCount: 2)},
+                              ), customerID: '1', receiptID: '',
+                            )),
                 ],
               )),
     );

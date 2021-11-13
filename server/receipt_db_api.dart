@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:product_app/models/product.dart';
 import 'package:product_app/models/receipt.dart';
+import 'package:product_app/server/authintication_api.dart';
 import 'package:product_app/server/database.dart';
 import 'package:product_app/server/repo_db_api.dart';
 
@@ -17,14 +18,25 @@ class ReceiptDBApi extends DataBase_API {
                   products: data['products']))
           .catchError((e) => null);
 
-  Future<List<Receipt>?> getAllReceipts() => getDocuments()
-      .then((value) => value == null
-          ? null
-          : value.docs
-              .map<Receipt>((QueryDocumentSnapshot e) =>
-                  Receipt.fromJSON(e.data() as Map<String, dynamic>, e.id))
-              .toList())
-      .catchError((onError) => null);
+  Future<List<Receipt>?> getReceipts({bool customerOnly = false}) =>
+      getDocuments()
+          .then((value) => value == null
+              ? null
+              : value.docs
+                  .where((receipt) {
+                    if (customerOnly) {
+                      String customerId =
+                          (receipt.data() as Map<String, dynamic>)['customerID'];
+                      String? userId = AuthenticationApi.gitUserUid;
+                      if (userId == null) throw 'some data is missing ';
+                      return customerId.compareTo(userId) != 0;
+                    } else
+                      return true;
+                  })
+                  .map<Receipt>((QueryDocumentSnapshot e) =>
+                      Receipt.fromJSON(e.data() as Map<String, dynamic>, e.id))
+                  .toList())
+          .catchError((onError) => null);
 
   Future<bool> updateReceipt(Receipt newReceipt) =>
       update(newReceipt.receiptID, newReceipt.toJSON())

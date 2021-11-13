@@ -11,6 +11,8 @@ import 'server/authintication_api.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   await Firebase.initializeApp();
   runApp(const SettingProvider(child: MyApp()));
 }
@@ -22,9 +24,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = SettingBlocProvider.of(context).theme;
     return AuthenticationProvider(
+      authenticationBloc: AuthenticationBloc(AuthenticationApi()),
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'Product app',
+          title: 'The Honest seller',
           theme: ThemeData(
               primarySwatch: theme.primaryColor,
               backgroundColor: theme.backGroundColor,
@@ -46,7 +49,6 @@ class MyApp extends StatelessWidget {
               )),
           // home:const ZoomDrawerWidget(),
           home: const LoadingPage()),
-      authenticationBloc: AuthenticationBloc(AuthenticationApi()),
     );
   }
 }

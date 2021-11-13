@@ -1,11 +1,9 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:product_app/bloc/authentication_bloc.dart';
+import 'package:product_app/bloc/auth_bloc.dart';
 import 'package:product_app/bloc/authentication_provider.dart';
-import 'package:product_app/bloc/login_bloc.dart';
 import 'package:product_app/bloc/setting_bloc_provider.dart';
 import 'package:product_app/classes/custom_page_route.dart';
 import 'package:product_app/widgets/zoom_drawer.dart';
@@ -20,35 +18,42 @@ class LoadingPage extends StatefulWidget {
 }
 
 class _LoadingPageState extends State<LoadingPage> {
-  late LoginBloc _provider;
+  late AuthenticationBloc _provider;
 
   @override
   void initState() {
     super.initState();
 
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-      _provider = AuthenticationProvider.of(context).loginBloc;
+      _provider = AuthenticationProvider.of(context).authenticationBloc;
       Timer(const Duration(seconds: 3), () async {
         SettingBlocProvider.of(context).getSaveTheme();
-        await rootBundle
-            .load('assets/rive/520-990-teddy-login-screen.riv')
-            .then((tidy) {
-          _provider
-              .tryAutoSignIn()
-              .then((success) =>
-                  Navigator.of(context).pushReplacement(CustomPageRoute(
-                      child: Switcher(
-                    tidy: tidy,
-                    successResult: success,
-                  ))))
+        _provider.tryAutoSignIn().then((success) async {
+          if (success) {
+            _provider.authChanged.add(true);
+            CustomPageRoute(child: Switcher(tidy: null));
+          }
+          else {
+            _provider.authChanged.add(false);
+           final tidy= await rootBundle
+                .load('assets/rive/520-990-teddy-login-screen.riv')
+                .catchError((onError) {
+              _showError(onError);
+            });
+            CustomPageRoute(child: Switcher(tidy:tidy ,));
+          }
+        }).catchError((e)async{
+          _provider.authChanged.add(false);
+           _showError(e);
+          final tidy= await rootBundle
+              .load('assets/rive/520-990-teddy-login-screen.riv')
               .catchError((onError) {
             _showError(onError);
           });
-        }).catchError((error) {
-          _showError(error);
-        });
+           CustomPageRoute(child: Switcher(tidy:tidy ,));
         });
       });
+    });
   }
 
   _showError(error) {
@@ -90,26 +95,22 @@ class _LoadingPageState extends State<LoadingPage> {
 }
 
 class Switcher extends StatelessWidget {
-  final ByteData tidy;
+  final ByteData? tidy;
   late AuthenticationBloc _provider;
-  final bool successResult;
-  Switcher({Key? key, required this.tidy, required this.successResult})
+
+  Switcher({Key? key, required this.tidy})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     _provider = AuthenticationProvider.of(context).authenticationBloc;
-    return StreamBuilder<User?>(
-      stream: _provider.userAuthentication,
-      builder: (context, AsyncSnapshot<User?> snapshot) {
-        if (successResult) {
-          return const ZoomDrawerWidget();
-        }
-        if (snapshot.data != null) {
-          return const ZoomDrawerWidget();
-        } else {
-          return LogIn(tidy: tidy);
-        }
+    return StreamBuilder<bool>(
+      stream: _provider.authChangedStream,
+      builder: (context, AsyncSnapshot<bool> snapshot) {
+        if(snapshot.data==true)
+          return  ZoomDrawerWidget();
+        else
+          return LogIn(tidy: tidy!);
       },
     );
   }

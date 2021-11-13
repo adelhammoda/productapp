@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
 import 'package:product_app/bloc/authentication_provider.dart';
 import 'package:product_app/bloc/login_bloc.dart';
+import 'package:product_app/bloc/login_provider.dart';
 import 'package:product_app/bloc/setting_bloc_provider.dart';
 import 'package:product_app/models/theme.dart';
 import 'package:product_app/utils/my_icons_icons.dart';
@@ -52,7 +53,7 @@ class _LogInState extends State<LogIn> with SingleTickerProviderStateMixin {
   ///
   @override
   void didChangeDependencies() {
-    _provider = AuthenticationProvider.of(context).loginBloc;
+    _provider = LoginProvider.of(context).loginBloc;
     super.didChangeDependencies();
   }
 
@@ -125,7 +126,7 @@ class _LogInState extends State<LogIn> with SingleTickerProviderStateMixin {
       setState(() {
         _loading = true;
       });
-      await _provider.loginOrCreate(true)?.then((_) {
+      await _provider.login(true)?.then((_) {
         //TODO:delete of this codes because its for testing only
 
       }).catchError((error) {
@@ -140,7 +141,7 @@ class _LogInState extends State<LogIn> with SingleTickerProviderStateMixin {
       setState(() {
         _loading = true;
       });
-      await _provider.loginOrCreate(false)?.catchError((error) {
+      await _provider.login(false)?.catchError((error) {
         setState(() {
           _loading = false;
         });
